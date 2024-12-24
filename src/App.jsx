@@ -6,6 +6,7 @@ import Home from './Pages/Home';
 import About from './Pages/About';
 import SignUp from './Pages/SignUp';
 import Signin from './Pages/Signin';
+import FooterComponent from './Components/FooterComponent';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
     <Route path='/signup' element={<SignUp />} />
     <Route path='signin' element={<Signin />} />
   </Routes>
+  <FooterComponent />
   </BrowserRouter>
   );
 };
