@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { HiInformationCircle } from "react-icons/hi";
 import OAuth from "../Components/OAuth";
+import { useSelector } from "react-redux";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const {theme} = useSelector((state)=>state.theme)
   const navigate = useNavigate();
 
   //Function to handle the value change in the form
@@ -91,7 +93,7 @@ const SignUp = () => {
               />
             </div>
             <Button
-              className="bg-gradient-to-r from-emerald-300 to-emerald-500"
+              className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300" : 'bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500'}
               type="submit"
               disabled={loading}
             >

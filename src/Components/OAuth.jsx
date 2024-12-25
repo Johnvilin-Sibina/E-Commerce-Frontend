@@ -11,7 +11,9 @@ import { useNavigate } from 'react-router-dom';
 const OAuth = () => {
     const auth = getAuth(app)
     const dispatch = useDispatch()
+    const {theme} = useSelector((state)=>state.theme)
     const navigate = useNavigate()
+
     const handleSubmit = async()=>{
         const provider = new GoogleAuthProvider();
         provider.setCustomParameters({prompt:'select_account'})
@@ -33,14 +35,14 @@ const OAuth = () => {
                 dispatch(signInSuccess(data))
                 navigate('/')
             }
-            console.log(data);
+            //console.log(data);
         } catch (error) {
             dispatch(signInFailure(error.message))
         }
     }
 
     return (
-        <Button type='button' className='bg-gradient-to-r from-emerald-300 to-emerald-500' onClick={handleSubmit}>
+        <Button type='button' className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300" : 'bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500'} onClick={handleSubmit}>
             <FcGoogle className='mr-3 w-5 h-5' /><span>Continue with Google</span>
         </Button>
     );
