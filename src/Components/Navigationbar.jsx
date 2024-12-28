@@ -20,12 +20,24 @@ const Navigationbar = () => {
   const dispatch = useDispatch();
 
   return (
-    <Navbar className={theme === 'light' ? "border-b-2 bg-gradient-to-r from-green-500 via-green-300 to-green-500" : 'bg-gray-800'}>
+    <Navbar
+      className={
+        theme === "light"
+          ? " bg-gradient-to-r from-green-500 via-green-300 to-green-500"
+          : "dark:bg-black dark:border-b-2 dark:border-white"
+      }
+    >
       <Link
         to="/"
         className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white"
       >
-        <span className={theme === 'light' ? "px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg dark:bg-gray-950" : 'bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 rounded-lg px-2 py-1'}>
+        <span
+          className={
+            theme === "light"
+              ? "px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg"
+              : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 rounded-lg px-2 py-1"
+          }
+        >
           LootMart
         </span>
       </Link>
@@ -38,7 +50,11 @@ const Navigationbar = () => {
         />
       </form>
       <Button
-        className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 to-emerald-500 lg:hidden" : 'bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500'}
+        className={
+          theme === "light"
+            ? "bg-gradient-to-r from-emerald-300 to-emerald-500 lg:hidden"
+            : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 lg:hidden"
+        }
         outline
         pill
       >
@@ -46,7 +62,11 @@ const Navigationbar = () => {
       </Button>
       <div className="flex gap-2 md:order-2">
         <Button
-          className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 to-emerald-500 hidden sm:inline" : 'bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500'}
+          className={
+            theme === "light"
+              ? "bg-gradient-to-r from-emerald-300 to-emerald-500 hidden sm:inline"
+              : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500"
+          }
           outline
           pill
           onClick={() => dispatch(toggleTheme())}
@@ -59,8 +79,8 @@ const Navigationbar = () => {
             inline
             label={
               <Avatar
-                alt="User"
                 img={currentUser.rest.profilePicture}
+                alt="User"
                 rounded
               />
             }
@@ -77,7 +97,11 @@ const Navigationbar = () => {
         ) : (
           <Link to="/signin">
             <Button
-              className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 to-emerald-500" : 'bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500'}
+              className={
+                theme === "light"
+                  ? "bg-gradient-to-r from-emerald-300 to-emerald-500"
+                  : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500"
+              }
               outline
             >
               SignIn
