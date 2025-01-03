@@ -1,26 +1,45 @@
-import { Alert, Button, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "react-circular-progressbar/dist/styles.css";
-import { HiInformationCircle } from "react-icons/hi";
+import {
+  HiInformationCircle,
+  HiOutlineExclamationCircle,
+} from "react-icons/hi";
+import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOutSuccess,
+  updateFailure,
+  updateStart,
+  updateSuccess,
+} from "../Redux/Slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const DashboardProfile = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [imageFile, setImageFile] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const filePickerRef = useRef();
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({});
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+  const [updateUserError, setUpdateUserError] = useState(null);
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   //Function to handle profile picture update
   const handleImageChange = async (e) => {
-    setLoading(true);
     const file = e.target.files[0];
-    console.log(file);
     if (!file) {
-      setImageFileUploadError("An error occured during the upload.");
+      setImageFileUploadError("Please select a valid image file.");
+      return;
     }
+    setImageFileUploading(true);
+    setImageFileUploadError(null);
     const data = new FormData();
     data.append("file", file);
     data.append("upload_preset", "E-Commerce");
@@ -33,13 +52,109 @@ const DashboardProfile = () => {
           body: data,
         }
       );
-      const uploadImageUrl = await res.json();
-      if (uploadImageUrl?.url) {
-        setImageFileUrl(uploadImageUrl.url);
+      const uploadResponse = await res.json();
+      if (uploadResponse?.url) {
+        setImageFileUrl(uploadResponse.url);
+        setFormData((prev) => ({
+          ...prev,
+          profilePicture: uploadResponse.url,
+        }));
+      } else {
+        setImageFileUploadError("Failed to upload image. Please try again");
       }
-      setLoading(false);
     } catch (error) {
       setImageFileUploadError(error);
+    }
+    setImageFileUploading(false);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUpdateUserError(null);
+    setUpdateUserSuccess(null);
+    if (Object.keys(formData).length === 0) {
+      setUpdateUserError("No changes made");
+      return;
+    }
+    if (imageFileUploading) {
+      setUpdateUserError("Please wait while the image is uploading");
+      return;
+    }
+    try {
+      dispatch(updateStart());
+      const res = await fetch(
+        `http://localhost:5000/api/user/update/${currentUser.rest._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("Token"),
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        dispatch(updateFailure(data.message));
+        setUpdateUserError(data.message);
+      } else {
+        dispatch(updateSuccess(data));
+        setUpdateUserSuccess(data.message);
+      }
+    } catch (error) {
+      dispatch(updateFailure(error.message));
+      setUpdateUserError(error.message);
+    }
+  };
+
+  useEffect(()=>{
+   const fetchUpdatedUser = async()=>{
+    const res = await fetch(`http://localhost:5000/api/user/get-user/${currentUser.rest._id}`,{
+      method: 'GET',
+      headers:{
+        "Content-Type":'application/json',
+        'token':localStorage.getItem('Token')
+      }
+    })
+    const data = await res.json()
+    console.log(data)
+   }
+   fetchUpdatedUser()
+  },[updateUserSuccess])
+
+  const handleSignOut = () => {
+    dispatch(signOutSuccess());
+    localStorage.removeItem("Token");
+    navigate("/signin");
+  };
+
+  const handleDelete = async () => {
+    setShowModal(false);
+    try {
+      dispatch(deleteUserStart());
+      const response = await fetch(
+        `http://localhost:5000/api/user/delete/${currentUser.rest._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("Token"),
+          },
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+        navigate('/signup')
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -48,7 +163,7 @@ const DashboardProfile = () => {
       <h1 className="my-7 text-center font-serif font-semibold text-4xl text-emerald-900 dark:text-white">
         Profile
       </h1>
-      <form className="flex flex-col gap-5">
+      <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
         <input
           type="file"
           accept="image/*"
@@ -60,7 +175,7 @@ const DashboardProfile = () => {
           className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
           onClick={() => filePickerRef.current.click()}
         >
-          {loading ? (
+          {imageFileUploading ? (
             <div className="ms-6 mt-8">Loading...</div>
           ) : (
             <img
@@ -100,14 +215,21 @@ const DashboardProfile = () => {
           id="username"
           placeholder="User Name"
           defaultValue={currentUser.rest.username}
+          onChange={handleChange}
         />
         <TextInput
           type="email"
           id="email"
           placeholder="Email"
           defaultValue={currentUser.rest.email}
+          onChange={handleChange}
         />
-        <TextInput type="password" id="password" placeholder="*****" />
+        <TextInput
+          type="password"
+          id="password"
+          placeholder="*****"
+          onChange={handleChange}
+        />
         <Button
           type="submit"
           className={
@@ -115,13 +237,75 @@ const DashboardProfile = () => {
               ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300 mt-4"
               : "bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500 mt-4"
           }
+          disabled={loading || imageFileUploading}
         >
-          Update
+          {loading ? "Loading .." : "Update"}
         </Button>
       </form>
       <div className="text-red-600 flex justify-between mt-5">
-        <span className="cursor-pointer">Delete Account</span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span className="cursor-pointer" onClick={() => setShowModal(true)}>
+          Delete Account
+        </span>
+        <span className="cursor-pointer" onClick={handleSignOut}>
+          Sign Out
+        </span>
+        {updateUserSuccess && (
+          <Alert
+            className="mt-3"
+            color="success"
+            icon={HiInformationCircle}
+            withBorderAccent
+          >
+            <span className="font-medium me-2">Hurray!</span>
+            {updateUserSuccess}
+          </Alert>
+        )}
+        {updateUserError && (
+          <Alert
+            className="mt-3"
+            color="failure"
+            icon={HiInformationCircle}
+            withBorderAccent
+          >
+            <span className="font-medium me-2">OOPS!</span>
+            {updateUserError}
+          </Alert>
+        )}
+        {error && (
+          <Alert
+            className="mt-3"
+            color="failure"
+            icon={HiInformationCircle}
+            withBorderAccent
+          >
+            <span className="font-medium me-2">OOPS!</span>
+            {error}
+          </Alert>
+        )}
+        <Modal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          popup
+          size="md"
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className="h-14 w-14 text-gray-500 dark:text-gray-200 mb-4 mx-auto" />
+              <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-200">
+                Are you sure you want to delete this account?
+              </h3>
+              <div className="flex justify-between">
+                <Button color="failure" onClick={handleDelete}>
+                  Yes, I'm sure
+                </Button>
+                <Button color="gray" onClick={() => setShowModal(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     </div>
   );

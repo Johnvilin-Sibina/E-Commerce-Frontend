@@ -8,16 +8,24 @@ import {
   TextInput,
 } from "flowbite-react";
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaMoon, FaSearch, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../Redux/Slice/themeSlice";
+import { signOutSuccess } from "../Redux/Slice/userSlice";
 
 const Navigationbar = () => {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    dispatch(signOutSuccess());
+    localStorage.removeItem("Token");
+    navigate("/signin");
+  };
 
   return (
     <Navbar
@@ -92,7 +100,7 @@ const Navigationbar = () => {
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <DropdownDivider />
-            <DropdownItem>Sign Out</DropdownItem>
+            <DropdownItem onClick={handleSignOut}>Sign Out</DropdownItem>
           </Dropdown>
         ) : (
           <Link to="/signin">
