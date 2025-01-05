@@ -8,6 +8,8 @@ import Signin from "./Pages/Signin";
 import FooterComponent from "./Components/FooterComponent";
 import PrivateRoute from "./Components/PrivateRoute";
 import Dashboard from "./Pages/Dashboard";
+import AdminRoute from "./Components/AdminRoute";
+import CreateProducts from "./Components/CreateProducts";
 
 const App = () => {
   return (

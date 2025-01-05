@@ -4,10 +4,13 @@ import { HiArrowSmLeft, HiUser } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../Redux/Slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { FaSignOutAlt } from "react-icons/fa";
+import { AiFillProduct } from "react-icons/ai";
+import { MdCategory } from "react-icons/md";
 
 const DashboardSidebar = () => {
   const location = useLocation();
-  const {currentUser} = useSelector((state)=>state.user)
+  const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState("");
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -29,7 +32,7 @@ const DashboardSidebar = () => {
     <Sidebar className="w-full md:w-58">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Link to="dashboard?tab=profile">
+          <Link to="/dashboard?tab=profile">
             <Sidebar.Item
               active={tab === "profile"}
               icon={HiUser}
@@ -40,8 +43,28 @@ const DashboardSidebar = () => {
               Profile
             </Sidebar.Item>
           </Link>
+          <Link to="/dashboard?tab=createproducts">
+            <Sidebar.Item
+              active={tab === "createproducts"}
+              icon={AiFillProduct}
+              as="div"
+              className={!currentUser.rest.isAdmin && "hidden"}
+            >
+              Add Products
+            </Sidebar.Item>
+          </Link>
+          <Link to="/dashboard?tab=createcategory">
+            <Sidebar.Item
+              active={tab === "createcategory"}
+              icon={MdCategory}
+              as="div"
+              className={!currentUser.rest.isAdmin && "hidden"}
+            >
+              Add Category
+            </Sidebar.Item>
+          </Link>
           <Sidebar.Item
-            icon={HiArrowSmLeft}
+            icon={FaSignOutAlt}
             className="cursor-pointer"
             onClick={handleSignOut}
           >

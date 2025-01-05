@@ -99,6 +99,9 @@ const Navigationbar = () => {
             <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
+            <Link to={"/dashboard"}>
+              <Dropdown.Item>Dashboard</Dropdown.Item>
+            </Link>
             <DropdownDivider />
             <DropdownItem onClick={handleSignOut}>Sign Out</DropdownItem>
           </Dropdown>

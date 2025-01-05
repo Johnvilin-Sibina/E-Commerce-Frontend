@@ -20,7 +20,7 @@ const SignUp = () => {
   //Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
+    if (!formData.username || !formData.email || !formData.password || !formData.address || !formData.phoneNumber) {
       return setErrorMessage("Please fill out all the fields");
     }
     try {
@@ -89,6 +89,24 @@ const SignUp = () => {
                 type="password"
                 placeholder="Enter your password"
                 id="password"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label value="Address" />
+              <TextInput
+                type="text"
+                placeholder="Address including the pin code"
+                id="address"
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <Label value="Phone Number" />
+              <TextInput
+                type="tel"
+                placeholder="Enter your phone number"
+                id="phoneNumber"
                 onChange={handleChange}
               />
             </div>

@@ -30,6 +30,7 @@ const DashboardProfile = () => {
   const [updateUserError, setUpdateUserError] = useState(null);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
+  const [user,setUser] = useState(currentUser)
 
   //Function to handle profile picture update
   const handleImageChange = async (e) => {
@@ -111,20 +112,26 @@ const DashboardProfile = () => {
     }
   };
 
-  useEffect(()=>{
-   const fetchUpdatedUser = async()=>{
-    const res = await fetch(`http://localhost:5000/api/user/get-user/${currentUser.rest._id}`,{
-      method: 'GET',
-      headers:{
-        "Content-Type":'application/json',
-        'token':localStorage.getItem('Token')
-      }
-    })
-    const data = await res.json()
-    console.log(data)
-   }
-   fetchUpdatedUser()
-  },[updateUserSuccess])
+  // useEffect(()=>{
+  //  try {
+  //   const fetchUpdatedUser = async()=>{
+  //     const res = await fetch(`http://localhost:5000/api/user/get-user/${currentUser.rest._id}`,{
+  //       method: 'GET',
+  //       headers:{
+  //         "Content-Type":'application/json',
+  //         'token':localStorage.getItem('Token')
+  //       }
+  //     })
+  //     const data = await res.json()
+  //     console.log(data)
+  //    }
+  //    fetchUpdatedUser()
+  //    if(res.ok)
+  //     setUser(data)
+  //  } catch (error) {
+  //   console.log('An error occured:',error)
+  //  }
+  // },[currentUser])
 
   const handleSignOut = () => {
     dispatch(signOutSuccess());
@@ -214,20 +221,34 @@ const DashboardProfile = () => {
           type="text"
           id="username"
           placeholder="User Name"
-          defaultValue={currentUser.rest.username}
+          defaultValue={currentUser.rest.username || user.username}
           onChange={handleChange}
         />
         <TextInput
           type="email"
           id="email"
           placeholder="Email"
-          defaultValue={currentUser.rest.email}
+          defaultValue={currentUser.rest.email || user.email}
           onChange={handleChange}
         />
         <TextInput
           type="password"
           id="password"
           placeholder="*****"
+          onChange={handleChange}
+        />
+        <TextInput
+          type="text"
+          id="address"
+          placeholder="Address"
+          defaultValue={currentUser.rest.address || user.address}
+          onChange={handleChange}
+        />
+        <TextInput
+          type="text"
+          id="phoneNumber"
+          placeholder="Phone Number"
+          defaultValue={currentUser.rest.phoneNumber || user.phoneNumber}
           onChange={handleChange}
         />
         <Button

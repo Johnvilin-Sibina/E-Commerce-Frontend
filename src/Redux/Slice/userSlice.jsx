@@ -4,6 +4,7 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
+  category:null
 };
 
 const userSlice = createSlice({
@@ -54,6 +55,19 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    createCategoryStart:(state,action)=>{
+      state.loading = true;
+      state.error = null;
+    },
+    createCategorySuccess:(state,action)=>{
+      state.category = action.payload;
+      state.loading = false;
+      state.error = null
+    },
+    createCategoryFailure:(state,action)=>{
+      state.loading = false;
+      state.error = action.payload;
+    }
   },
 });
 
@@ -68,6 +82,9 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  createCategoryStart,
+  createCategorySuccess,
+  createCategoryFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
