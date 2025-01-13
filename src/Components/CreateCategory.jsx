@@ -13,6 +13,8 @@ const CreateCategory = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.user);
+  const [localError,setLocalError] = useState(null)
+  const [successMessage,setSuccessMessage] = useState(null)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -21,7 +23,7 @@ const CreateCategory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.categoryName || !formData.description) {
-      return dispatch(createCategoryFailure("Please fill out all the fields"));
+      return setLocalError("Please fill out all the fields");
     }
     try {
       dispatch(createCategoryStart());
@@ -39,6 +41,7 @@ const CreateCategory = () => {
       const data = await res.json();
       if (res.ok) {
         dispatch(createCategorySuccess(data));
+        setSuccessMessage(data.message)
         console.log(data);
       }
       if (!res.ok) {
@@ -89,7 +92,7 @@ const CreateCategory = () => {
               Create
             </Button>
           </form>
-          {error && (
+          {(error || localError) && (
             <Alert
               className="mt-3"
               color="failure"
@@ -97,8 +100,19 @@ const CreateCategory = () => {
               withBorderAccent
             >
               <span className="font-medium me-2">OOPS!</span>
-              {error}
+              {error || localError}
             </Alert>
+          )}
+          {successMessage && (
+            <Alert
+            className="mt-3"
+            color="success"
+            icon={HiInformationCircle}
+            withBorderAccent
+          >
+            <span className="font-medium me-2">Hurray!</span>
+            {successMessage}
+          </Alert>
           )}
         </div>
       </div>

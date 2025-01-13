@@ -4,7 +4,8 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
-  category:null
+  category:null,
+  product:null
 };
 
 const userSlice = createSlice({
@@ -67,6 +68,19 @@ const userSlice = createSlice({
     createCategoryFailure:(state,action)=>{
       state.loading = false;
       state.error = action.payload;
+    },
+    createProductStart:(state)=>{
+      state.loading = true;
+      state.error = null
+    },
+    createProductSuccess:(state,action)=>{
+      state.product = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    createProductFailure:(state,action)=>{
+      state.loading = false;
+      state.error = action.payload
     }
   },
 });
@@ -85,6 +99,9 @@ export const {
   createCategoryStart,
   createCategorySuccess,
   createCategoryFailure,
+  createProductStart,
+  createProductSuccess,
+  createProductFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

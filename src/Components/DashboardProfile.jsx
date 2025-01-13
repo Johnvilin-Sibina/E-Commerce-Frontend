@@ -54,11 +54,11 @@ const DashboardProfile = () => {
         }
       );
       const uploadResponse = await res.json();
-      if (uploadResponse?.url) {
+      if (uploadResponse?.secure_url) {
         setImageFileUrl(uploadResponse.url);
         setFormData((prev) => ({
           ...prev,
-          profilePicture: uploadResponse.url,
+          profilePicture: uploadResponse.secure_url,
         }));
       } else {
         setImageFileUploadError("Failed to upload image. Please try again");
