@@ -4,7 +4,7 @@ import { HiArrowSmLeft, HiUser } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../Redux/Slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaCartPlus, FaSignOutAlt } from "react-icons/fa";
 import { AiFillProduct } from "react-icons/ai";
 import { MdCategory } from "react-icons/md";
 
@@ -61,6 +61,16 @@ const DashboardSidebar = () => {
               className={!currentUser.rest.isAdmin && "hidden"}
             >
               Add Category
+            </Sidebar.Item>
+          </Link>
+          <Link to="/dashboard?tab=mycart">
+            <Sidebar.Item
+              active={tab === "mycart"}
+              icon={FaCartPlus}
+              as="div"
+              className={currentUser.rest.isAdmin && "hidden"}
+            >
+              My Cart
             </Sidebar.Item>
           </Link>
           <Sidebar.Item

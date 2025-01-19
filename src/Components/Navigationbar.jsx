@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Button,
   Dropdown,
   DropdownDivider,
@@ -7,9 +8,9 @@ import {
   Navbar,
   TextInput,
 } from "flowbite-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaMoon, FaSearch, FaSun } from "react-icons/fa";
+import { FaCartPlus, FaMoon, FaSearch, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../Redux/Slice/themeSlice";
 import { signOutSuccess } from "../Redux/Slice/userSlice";
@@ -18,6 +19,7 @@ const Navigationbar = () => {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
+  const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -26,6 +28,27 @@ const Navigationbar = () => {
     localStorage.removeItem("Token");
     navigate("/signin");
   };
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`, {
+        headers: {
+          token: localStorage.getItem("Token"),
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setCartCount(data.itemCount);
+      }
+    } catch (error) {
+      console.log("Failed to fetch cart count:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCartCount();
+  }, []);
 
   return (
     <Navbar
@@ -99,9 +122,10 @@ const Navigationbar = () => {
             <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
-            <Link to={"/dashboard"}>
+            <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Dashboard</Dropdown.Item>
             </Link>
+           
             <DropdownDivider />
             <DropdownItem onClick={handleSignOut}>Sign Out</DropdownItem>
           </Dropdown>
@@ -119,6 +143,14 @@ const Navigationbar = () => {
             </Button>
           </Link>
         )}
+        <div className="flex items-center">
+         <Link to='/dashboard?tab=mycart'>
+         <Badge color="default">
+            <FaCartPlus size={30} title={`${cartCount} items`}/>
+          </Badge>
+         </Link>
+          {/* <Badge color='default'>{cartCount > 0 && <span className="ml-1">{cartCount}</span>}</Badge> */}
+        </div>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>

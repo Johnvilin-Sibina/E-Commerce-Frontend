@@ -8,8 +8,8 @@ import Signin from "./Pages/Signin";
 import FooterComponent from "./Components/FooterComponent";
 import PrivateRoute from "./Components/PrivateRoute";
 import Dashboard from "./Pages/Dashboard";
-import AdminRoute from "./Components/AdminRoute";
-import CreateProducts from "./Components/CreateProducts";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 const App = () => {
   return (
@@ -19,7 +19,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="signin" element={<Signin />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:id/:token" element={<ResetPassword />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>

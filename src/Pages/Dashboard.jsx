@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import DashboardProfile from "../Components/DashboardProfile";
+import DashboardProfile from "./DashboardProfile";
 import DashboardSidebar from "../Components/DashboardSidebar";
-import CreateProducts from "../Components/CreateProducts";
+import CreateProducts from "./CreateProducts";
 import { useSelector } from "react-redux";
-import CreateCategory from "../Components/CreateCategory";
+import CreateCategory from "./CreateCategory";
+import Cart from "./Cart";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -26,9 +27,10 @@ const Dashboard = () => {
       {tab === "createproducts" && currentUser.rest.isAdmin && (
         <CreateProducts />
       )}
-       {tab === "createcategory" && currentUser.rest.isAdmin && (
+      {tab === "createcategory" && currentUser.rest.isAdmin && (
         <CreateCategory />
       )}
+      {tab == "mycart" && !currentUser.rest.isAdmin && <Cart />}
     </div>
   );
 };

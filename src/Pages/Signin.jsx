@@ -110,6 +110,9 @@ const Signin = () => {
               Sign Up
             </Link>
           </div>
+          <div>
+          <Link to='/forgotpassword' className="text-blue-700 font-semibold">Forgot Password?</Link>
+          </div>
           {errorMessage && (
             <Alert
               className="mt-3"
