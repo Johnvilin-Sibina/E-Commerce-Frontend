@@ -1,3 +1,4 @@
+import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -88,7 +89,7 @@ const Cart = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen w-screen p-8">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
         <h1 className="text-3xl  text-emerald-700 font-serif font-semibold mb-4 text-center">My Cart</h1>
         {cartItems.length === 0 ? (
@@ -111,8 +112,8 @@ const Cart = () => {
                       {item.name}
                     </p>
                     <p className="text-sm text-gray-600">{item.description}</p>
-                    <p className="text-sm text-gray-600">
-                      ${item.price.toFixed(2)}
+                    <p className="text-gray-500">
+                     <b> ${item.price.toFixed(2)}</b>
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <button
@@ -148,11 +149,14 @@ const Cart = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between items-center mt-4">
+            <div className="flex justify-between items-center mt-4 border-b border-gray-200 pb-4 mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Total</h2>
               <p className="text-xl font-semibold text-gray-800">
                 Rs: {subtotal.toFixed(2)}
               </p>
+            </div>
+            <div className="flex justify-end mt-5">
+              <Button type='button' color='blue'>Pay</Button>
             </div>
           </>
         )}

@@ -22,6 +22,7 @@ const Navigationbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {cart} = useSelector((state)=>state.user)
 
   const handleSignOut = () => {
     dispatch(signOutSuccess());
@@ -31,11 +32,14 @@ const Navigationbar = () => {
 
   const fetchCartCount = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`, {
-        headers: {
-          token: localStorage.getItem("Token"),
-        },
-      });
+      const res = await fetch(
+        `http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`,
+        {
+          headers: {
+            token: localStorage.getItem("Token"),
+          },
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
@@ -125,7 +129,7 @@ const Navigationbar = () => {
             <Link to={"/dashboard?tab=profile"}>
               <Dropdown.Item>Dashboard</Dropdown.Item>
             </Link>
-           
+
             <DropdownDivider />
             <DropdownItem onClick={handleSignOut}>Sign Out</DropdownItem>
           </Dropdown>
@@ -143,14 +147,30 @@ const Navigationbar = () => {
             </Button>
           </Link>
         )}
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
          <Link to='/dashboard?tab=mycart'>
          <Badge color="default">
             <FaCartPlus size={30} title={`${cartCount} items`}/>
           </Badge>
          </Link>
-          {/* <Badge color='default'>{cartCount > 0 && <span className="ml-1">{cartCount}</span>}</Badge> */}
-        </div>
+          <Badge color='default'>{cartCount > 0 && <span className="ml-1">{cartCount}</span>}</Badge>
+        </div> */}
+        {currentUser && !currentUser.rest.isAdmin &&(
+          <div className="flex items-center relative">
+            <Link to="/dashboard?tab=mycart">
+              <FaCartPlus size={30} className="text-white" />
+              {cart?.length > 0 && (
+                <Badge
+                  color="default"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2"
+                >
+                  {cart.length}
+                </Badge>
+              )}
+            </Link>
+          </div>
+        )}
+
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
