@@ -19,10 +19,9 @@ const Navigationbar = () => {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [cartCount, setCartCount] = useState(0);
+  //const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {cart} = useSelector((state)=>state.user)
 
   const handleSignOut = () => {
     dispatch(signOutSuccess());
@@ -30,29 +29,29 @@ const Navigationbar = () => {
     navigate("/signin");
   };
 
-  const fetchCartCount = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`,
-        {
-          headers: {
-            token: localStorage.getItem("Token"),
-          },
-        }
-      );
+  // const fetchCartCount = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`,
+  //       {
+  //         headers: {
+  //           token: localStorage.getItem("Token"),
+  //         },
+  //       }
+  //     );
 
-      const data = await res.json();
-      if (res.ok) {
-        setCartCount(data.itemCount);
-      }
-    } catch (error) {
-      console.log("Failed to fetch cart count:", error);
-    }
-  };
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       setCartCount(data.itemCount);
+  //     }
+  //   } catch (error) {
+  //     console.log("Failed to fetch cart count:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchCartCount();
-  }, []);
+  // useEffect(() => {
+  //   fetchCartCount();
+  // }, []);
 
   return (
     <Navbar
@@ -155,7 +154,7 @@ const Navigationbar = () => {
          </Link>
           <Badge color='default'>{cartCount > 0 && <span className="ml-1">{cartCount}</span>}</Badge>
         </div> */}
-        {currentUser && !currentUser.rest.isAdmin &&(
+        {/* {currentUser && !currentUser.rest.isAdmin &&(
           <div className="flex items-center relative">
             <Link to="/dashboard?tab=mycart">
               <FaCartPlus size={30} className="text-white" />
@@ -169,8 +168,12 @@ const Navigationbar = () => {
               )}
             </Link>
           </div>
-        )}
-
+        )} */}
+        <div className="flex items-center relative">
+          <Link to="/dashboard?tab=mycart">
+            <FaCartPlus size={30} className="text-white" />
+          </Link>
+        </div>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>

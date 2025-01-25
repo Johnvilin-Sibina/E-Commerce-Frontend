@@ -6,7 +6,6 @@ const initialState = {
   loading: false,
   category:null,
   product:null,
-  cart:[],
 };
 
 const userSlice = createSlice({
@@ -82,23 +81,7 @@ const userSlice = createSlice({
     createProductFailure:(state,action)=>{
       state.loading = false;
       state.error = action.payload
-    },    
-    addToCartStart: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    addToCartSuccess: (state, action) => {
-      state.cart = [...(state.cart || []), action.payload]; // Append new cart item
-      state.loading = false;
-      state.error = null;
-    },
-    addToCartFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    setCart:(state,action)=>{
-      state.cart = action.payload
-    },    
+    }, 
   },
 });
 
@@ -119,10 +102,6 @@ export const {
   createProductStart,
   createProductSuccess,
   createProductFailure,
-  addToCartStart,
-  addToCartSuccess,
-  addToCartFailure,
-  setCart,
 } = userSlice.actions;
 
 export default userSlice.reducer;

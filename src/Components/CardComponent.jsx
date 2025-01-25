@@ -2,14 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Carousel } from "flowbite-react";
 import { FaCartPlus } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartFailure, addToCartStart, addToCartSuccess } from "../Redux/Slice/userSlice";
-
 
 const CardComponent = () => {
   const [products, setProducts] = useState([]);
   const {currentUser} = useSelector((state)=>state.user)
-  const dispatch = useDispatch()
-
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -24,7 +20,6 @@ const CardComponent = () => {
 
   const addToCart = async (productId) => {
     try {
-      dispatch(addToCartStart())
       const res = await fetch("http://localhost:5000/api/user/add-to-cart", {
         method: "POST",
         headers: {
@@ -36,14 +31,11 @@ const CardComponent = () => {
 
       const data = await res.json();
       if (res.ok) {
-        dispatch(addToCartSuccess(data.cartItem))
         alert("Product added to cart successfully");
       } else {
-        dispatch(addToCartFailure(data.message || "Failed to add product to cart"))
         alert(data.message || "Failed to add product to cart");
       }
     } catch (error) {
-      dispatch(addToCartFailure("Error adding product to cart:", error))
       console.error("Error adding product to cart:", error);
     }
   };

@@ -1,6 +1,7 @@
 import { Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {loadStripe} from '@stripe/stripe-js';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -59,6 +60,7 @@ const Cart = () => {
     }
   };
 
+  
   const handleRemoveFromCart = async (productId) => {
     try {
       const response = await fetch(
@@ -88,6 +90,26 @@ const Cart = () => {
     fetchCartDetails();
   }, []);
 
+  const makePayment = async()=>{
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
+try {
+  const response = await fetch('http://localhost:5000/api/user/create-checkout-session',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      token:localStorage.getItem('Token')
+    },
+    body:JSON.stringify({products:cartItems})
+  })
+  const session = await response.json()
+
+  const result = stripe.redirectToCheckout({
+    sessionId:session.id
+  })
+} catch (error) {
+  console.log(error)
+}
+  }
   return (
     <div className="min-h-screen w-screen p-8">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
@@ -156,7 +178,7 @@ const Cart = () => {
               </p>
             </div>
             <div className="flex justify-end mt-5">
-              <Button type='button' color='blue'>Pay</Button>
+              <Button type='button' color='blue' onClick={makePayment}>Pay</Button>
             </div>
           </>
         )}
