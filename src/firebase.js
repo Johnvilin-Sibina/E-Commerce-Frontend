@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "lootmart-dd9e8",
   storageBucket: "lootmart-dd9e8.firebasestorage.app",
   messagingSenderId: "55938783965",
-  appId: "1:55938783965:web:110ecca94cd700b94a5934"
+  appId: "1:55938783965:web:110ecca94cd700b94a5934",
 };
 
 // Initialize Firebase

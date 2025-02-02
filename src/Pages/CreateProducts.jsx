@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { HiInformationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  createCategoryStart,
   createProductFailure,
   createProductStart,
   createProductSuccess,
@@ -11,13 +10,13 @@ import {
 
 const CreateProducts = () => {
   const { theme } = useSelector((state) => state.theme);
-  const {error} = useSelector((state)=>state.user);
-  const [localError,setLocalError] = useState(null);
+  const { error } = useSelector((state) => state.user);
+  const [localError, setLocalError] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
-  const [successMessage,setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
   const dispatch = useDispatch();
 
   //Upload images to cloudinary
@@ -60,7 +59,7 @@ const CreateProducts = () => {
       }
 
       if (uploadedUrls.length) {
-        setImageFileUrl(uploadedUrls); // Store all uploaded URLs in state
+        setImageFileUrl(uploadedUrls);
         setFormData((prev) => ({
           ...prev,
           images: uploadedUrls, // Add images array to formData
@@ -68,14 +67,13 @@ const CreateProducts = () => {
       }
     } catch (error) {
       setImageFileUploadError("An error occurred while uploading images.");
-      console.log(error);
     }
 
     setImageFileUploading(false);
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -88,33 +86,39 @@ const CreateProducts = () => {
       !formData.category ||
       !formData.images
     ) {
-    //   return dispatch(createProductFailure("Please fill out all the fields"));
-    return setLocalError('Please fill out all the fields')
+      return setLocalError("Please fill out all the fields");
     }
     try {
-      dispatch(createCategoryStart());
-      const res = await fetch("http://localhost:5000/api/admin/create-product", {
-        method: "POST",
+      dispatch(createProductStart());
+      const res = await fetch(
+        "http://localhost:5000/api/admin/create-product",
+        {
+          method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-          token: localStorage.getItem("Token"),
-        },
-        body: JSON.stringify(formData),
-      });
+          headers: {
+            "Content-Type": "application/json",
+            token: localStorage.getItem("Token"),
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         dispatch(createProductSuccess(data));
-        setSuccessMessage(data.message)
-        console.log(data);
+        setSuccessMessage(data.message);
+        setFormData({
+          productName: "",
+          description: "",
+          category: "",
+          price: "",
+          stock: "",
+        });
       }
       if (!res.ok) {
         dispatch(createProductFailure(data.message));
-        console.log(data.message);
       }
     } catch (error) {
-        dispatch(createProductFailure(error.message));
-        console.log(error.message);
+      dispatch(createProductFailure(error.message));
     }
   };
 
@@ -122,7 +126,13 @@ const CreateProducts = () => {
     <div className="min-h-screen w-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col gap-5">
         <div className="flex-1 text-center">
-          <h1 className="mt-4 mb-4 text-emerald-700 font-serif font-bold text-3xl">
+          <h1
+            className={
+              theme === "light"
+                ? "mt-4 mb-4 text-emerald-700 font-serif font-bold text-3xl"
+                : "mt-4 mb-4 text-white font-serif font-bold text-3xl"
+            }
+          >
             Add Products
           </h1>
         </div>
@@ -134,6 +144,7 @@ const CreateProducts = () => {
                 type="text"
                 placeholder="Enter the product name"
                 id="productName"
+                value={formData.productName}
                 onChange={handleChange}
               />
             </div>
@@ -143,6 +154,7 @@ const CreateProducts = () => {
                 type="text"
                 placeholder="Enter the product description"
                 id="description"
+                value={formData.description}
                 onChange={handleChange}
               />
             </div>
@@ -152,6 +164,7 @@ const CreateProducts = () => {
                 type="text"
                 placeholder="Enter the product category"
                 id="category"
+                value={formData.category}
                 onChange={handleChange}
               />
             </div>
@@ -161,6 +174,7 @@ const CreateProducts = () => {
                 type="text"
                 placeholder="Enter the product price"
                 id="price"
+                value={formData.price}
                 onChange={handleChange}
               />
             </div>
@@ -170,6 +184,7 @@ const CreateProducts = () => {
                 type="text"
                 placeholder="Enter the stock"
                 id="stock"
+                value={formData.stock}
                 onChange={handleChange}
               />
             </div>
@@ -179,7 +194,7 @@ const CreateProducts = () => {
                 id="images"
                 accept="image/*"
                 multiple
-                helperText="JPEG/JPG, PNG, SVG, GIF, BMP, WebP "
+                helperText="JPEG/JPG, PNG, SVG, GIF, BMP, WebP"
                 onChange={handleImageUpload}
               />
             </div>
@@ -195,26 +210,27 @@ const CreateProducts = () => {
             </Button>
           </form>
           {(error || localError || imageFileUploadError) && (
-                   <Alert
-                     className="mt-3"
-                     color="failure"
-                     icon={HiInformationCircle}
-                     withBorderAccent
-                   >
-                     <span className="font-medium me-2">OOPS!</span>
-                     {error || localError || imageFileUploadError }
-                   </Alert>
-                 )}
-                 { successMessage && (
-                    <Alert
-                    className='mt-3'
-                    color="success"
-                    icon={HiInformationCircle}
-                    withBorderAccent>
-                        <span className='font-medium me-2'>Hurray!</span>
-                        {successMessage}
-                    </Alert>
-                 )}
+            <Alert
+              className="mt-3"
+              color="failure"
+              icon={HiInformationCircle}
+              withBorderAccent
+            >
+              <span className="font-medium me-2">OOPS!</span>
+              {error || localError || imageFileUploadError}
+            </Alert>
+          )}
+          {successMessage && (
+            <Alert
+              className="mt-3"
+              color="success"
+              icon={HiInformationCircle}
+              withBorderAccent
+            >
+              <span className="font-medium me-2">Hurray!</span>
+              {successMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>

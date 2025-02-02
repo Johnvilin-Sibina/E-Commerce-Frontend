@@ -1,14 +1,22 @@
-import { Button } from "flowbite-react";
+import { Alert, Button } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
+import {
+  fetchCartFailure,
+  fetchCartStart,
+  fetchCartSuccess,
+} from "../Redux/Slice/userSlice";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [localError, setLocalError] = useState(null);
   const [subtotal, setSubtotal] = useState(0);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, cart, error } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+  const dispatch = useDispatch();
 
   const fetchCartDetails = async () => {
+    dispatch(fetchCartStart());
     try {
       const response = await fetch(
         `http://localhost:5000/api/user/cart-details/${currentUser.rest._id}`,
@@ -21,15 +29,15 @@ const Cart = () => {
       );
 
       if (!response.ok) {
-        console.log("Failed to fetch cart details");
+        dispatch(fetchCartFailure("Failed to fetch cart details"));
         return;
       }
 
       const data = await response.json();
-      setCartItems(data.cartItems);
+      dispatch(fetchCartSuccess(data.cartItems));
       setSubtotal(data.subtotal);
     } catch (error) {
-      console.log(error.message);
+      dispatch(fetchCartFailure(error.message));
     }
   };
 
@@ -50,13 +58,13 @@ const Cart = () => {
       );
 
       if (!response.ok) {
-        console.log("Failed to update quantity");
+        setLocalError("Failed to update quantity");
         return;
       }
 
       await fetchCartDetails();
     } catch (error) {
-      console.log(error.message);
+      setLocalError(error.message);
     }
   };
 
@@ -75,19 +83,13 @@ const Cart = () => {
       );
 
       if (!response.ok) {
-        console.log("Failed to remove item from cart");
+        setLocalError("Failed to remove item from cart");
         return;
       }
 
       await fetchCartDetails();
-
-      if (cartItems.length === 1) {
-        setCartItems([]); // Ensure re-render
-        setSubtotal(0);
-      }
-
     } catch (error) {
-      console.log(error.message);
+      setLocalError(error.message);
     }
   };
 
@@ -106,30 +108,51 @@ const Cart = () => {
             "Content-Type": "application/json",
             token: localStorage.getItem("Token"),
           },
-          body: JSON.stringify({ products: cartItems, user: currentUser.rest }),
+          body: JSON.stringify({ products: cart, user: currentUser.rest }),
         }
       );
       const session = await response.json();
 
-      const result = stripe.redirectToCheckout({
+      const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
     } catch (error) {
-      console.log(error);
+      setLocalError(error);
     }
   };
+
   return (
     <div className="min-h-screen w-screen p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h1 className="text-3xl  text-emerald-700 font-serif font-semibold mb-4 text-center">
+      <div
+        className={
+          theme === "light"
+            ? "max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6"
+            : "bg-black border-white border-2 rounded-lg max-w-4xl mx-auto shadow-md p-6"
+        }
+      >
+        <h1
+          className={
+            theme === "ligth"
+              ? "text-3xl  text-emerald-700 font-serif font-semibold mb-4 text-center"
+              : "text-3xl text-white font-serif font-semibold mb-4 text-center"
+          }
+        >
           My Cart
         </h1>
-        {cartItems.length === 0 ? (
-          <p className="text-gray-600">Your cart is empty.</p>
+        {cart.length === 0 ? (
+          <p className={theme === "light" ? "text-gray-600" : "text-white"}>
+            Your cart is empty.
+          </p>
         ) : (
           <>
-            <div className="border-b border-gray-200 pb-4 mb-4">
-              {cartItems.map((item) => (
+            <div
+              className={
+                theme === "light"
+                  ? "border-b border-gray-200 pb-4 mb-4"
+                  : "border-b border-white pb-4 mb-4"
+              }
+            >
+              {cart.map((item) => (
                 <div
                   key={item.id}
                   className="flex items-center justify-between py-3 gap-4"
@@ -140,16 +163,38 @@ const Cart = () => {
                     className="w-16 h-16 object-cover rounded"
                   />
                   <div className="flex-1">
-                    <p className="text-lg font-medium text-gray-800">
+                    <p
+                      className={
+                        theme === "light"
+                          ? "text-lg font-medium text-gray-800"
+                          : "text-lg font-medium text-white"
+                      }
+                    >
                       {item.name}
                     </p>
-                    <p className="text-sm text-gray-600">{item.description}</p>
-                    <p className="text-gray-500">
+                    <p
+                      className={
+                        theme === "light"
+                          ? "text-sm text-gray-600"
+                          : "text-sm text-white"
+                      }
+                    >
+                      {item.description}
+                    </p>
+                    <p
+                      className={
+                        theme === "light" ? "text-gray-500" : "text-white"
+                      }
+                    >
                       <b> ${item.price.toFixed(2)}</b>
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <button
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        className={
+                          theme === "light"
+                            ? "px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            : "px-2 py-1 bg-gray-700 rounded hover:bg-gray-900"
+                        }
                         onClick={() =>
                           handleQuantityChange(item.id, item.quantity - 1)
                         }
@@ -158,7 +203,11 @@ const Cart = () => {
                       </button>
                       <span>{item.quantity}</span>
                       <button
-                        className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        className={
+                          theme === "light"
+                            ? "px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            : "px-2 py-1 bg-gray-700 rounded hover:bg-gray-900"
+                        }
                         onClick={() =>
                           handleQuantityChange(item.id, item.quantity + 1)
                         }
@@ -168,7 +217,13 @@ const Cart = () => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-lg font-medium text-gray-800">
+                    <p
+                      className={
+                        theme === "light"
+                          ? "text-lg font-medium text-gray-800"
+                          : "text-lg font-medium text-white"
+                      }
+                    >
                       <b>SubTotal: </b>Rs: {item.totalPrice.toFixed(2)}
                     </p>
                     <button
@@ -181,9 +236,29 @@ const Cart = () => {
                 </div>
               ))}
             </div>
-            <div className="flex justify-between items-center mt-4 border-b border-gray-200 pb-4 mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Total</h2>
-              <p className="text-xl font-semibold text-gray-800">
+            <div
+              className={
+                theme === "light"
+                  ? "flex justify-between items-center mt-4 border-b border-gray-200 pb-4 mb-4"
+                  : "flex justify-between items-center mt-4 border-b border-white pb-4 mb-4"
+              }
+            >
+              <h2
+                className={
+                  theme === "light"
+                    ? "text-xl font-semibold text-gray-800"
+                    : "text-xl font-semibold text-white"
+                }
+              >
+                Total
+              </h2>
+              <p
+                className={
+                  theme === "light"
+                    ? "text-xl font-semibold text-gray-800"
+                    : "text-xl font-semibold text-white"
+                }
+              >
                 Rs: {subtotal.toFixed(2)}
               </p>
             </div>
@@ -193,6 +268,13 @@ const Cart = () => {
               </Button>
             </div>
           </>
+        )}
+      </div>
+      <div className="m-4">
+        {(error || localError) && (
+          <Alert color="failure">
+            <span className="font-medium">Error:</span> {error || localError}
+          </Alert>
         )}
       </div>
     </div>

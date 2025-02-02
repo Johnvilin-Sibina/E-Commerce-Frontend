@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Button,
   Dropdown,
   DropdownDivider,
@@ -8,7 +7,7 @@ import {
   Navbar,
   TextInput,
 } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCartPlus, FaMoon, FaSearch, FaSun } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +18,6 @@ const Navigationbar = () => {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  //const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,30 +26,6 @@ const Navigationbar = () => {
     localStorage.removeItem("Token");
     navigate("/signin");
   };
-
-  // const fetchCartCount = async () => {
-  //   try {
-  //     const res = await fetch(
-  //       `http://localhost:5000/api/user/cart-count/${currentUser.rest._id}`,
-  //       {
-  //         headers: {
-  //           token: localStorage.getItem("Token"),
-  //         },
-  //       }
-  //     );
-
-  //     const data = await res.json();
-  //     if (res.ok) {
-  //       setCartCount(data.itemCount);
-  //     }
-  //   } catch (error) {
-  //     console.log("Failed to fetch cart count:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchCartCount();
-  // }, []);
 
   return (
     <Navbar
@@ -146,29 +120,6 @@ const Navigationbar = () => {
             </Button>
           </Link>
         )}
-        {/* <div className="flex items-center">
-         <Link to='/dashboard?tab=mycart'>
-         <Badge color="default">
-            <FaCartPlus size={30} title={`${cartCount} items`}/>
-          </Badge>
-         </Link>
-          <Badge color='default'>{cartCount > 0 && <span className="ml-1">{cartCount}</span>}</Badge>
-        </div> */}
-        {/* {currentUser && !currentUser.rest.isAdmin &&(
-          <div className="flex items-center relative">
-            <Link to="/dashboard?tab=mycart">
-              <FaCartPlus size={30} className="text-white" />
-              {cart?.length > 0 && (
-                <Badge
-                  color="default"
-                  className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2"
-                >
-                  {cart.length}
-                </Badge>
-              )}
-            </Link>
-          </div>
-        )} */}
         <div className="flex items-center relative">
           <Link to="/dashboard?tab=mycart">
             <FaCartPlus size={30} className="text-white" />

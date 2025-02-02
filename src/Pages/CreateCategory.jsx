@@ -13,11 +13,11 @@ const CreateCategory = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.user);
-  const [localError,setLocalError] = useState(null)
-  const [successMessage,setSuccessMessage] = useState(null)
+  const [localError, setLocalError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
@@ -41,23 +41,27 @@ const CreateCategory = () => {
       const data = await res.json();
       if (res.ok) {
         dispatch(createCategorySuccess(data));
-        setSuccessMessage(data.message)
-        console.log(data);
+        setSuccessMessage(data.message);
+        setFormData({ categoryName: "", description: "" });
       }
       if (!res.ok) {
         dispatch(createCategoryFailure(data.message));
-        console.log(data.message);
       }
     } catch (error) {
       dispatch(createCategoryFailure(error.message));
-      console.log(error.message);
     }
   };
   return (
     <div className="min-h-screen w-screen mt-20">
       <div className="flex p-3 max-w-3xl mx-auto flex-col gap-5">
         <div className="flex-1 text-center">
-          <h1 className="mt-4 mb-4 text-emerald-700 font-serif font-bold text-3xl">
+          <h1
+            className={
+              theme === "light"
+                ? "mt-4 mb-4 text-emerald-700 font-serif font-bold text-3xl"
+                : "mt-4 mb-4 text-white font-serif font-bold text-3xl"
+            }
+          >
             Create Category
           </h1>
         </div>
@@ -69,6 +73,7 @@ const CreateCategory = () => {
                 type="text"
                 placeholder="Enter the category name"
                 id="categoryName"
+                value={formData.categoryName}
                 onChange={handleChange}
               />
             </div>
@@ -78,6 +83,7 @@ const CreateCategory = () => {
                 type="text"
                 placeholder="Enter the category description"
                 id="description"
+                value={formData.description}
                 onChange={handleChange}
               />
             </div>
@@ -105,14 +111,14 @@ const CreateCategory = () => {
           )}
           {successMessage && (
             <Alert
-            className="mt-3"
-            color="success"
-            icon={HiInformationCircle}
-            withBorderAccent
-          >
-            <span className="font-medium me-2">Hurray!</span>
-            {successMessage}
-          </Alert>
+              className="mt-3"
+              color="success"
+              icon={HiInformationCircle}
+              withBorderAccent
+            >
+              <span className="font-medium me-2">Hurray!</span>
+              {successMessage}
+            </Alert>
           )}
         </div>
       </div>

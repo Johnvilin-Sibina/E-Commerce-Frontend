@@ -1,5 +1,5 @@
 import { Footer } from 'flowbite-react';
-import { BsGithub, BsLinkedin, BsTwitter } from "react-icons/bs";
+import { BsGithub, BsLinkedin } from "react-icons/bs";
 import React from 'react';
 
 const FooterComponent = () => {

@@ -18,6 +18,7 @@ const OAuth = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    dispatch(signInStart())
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
     try {
@@ -39,7 +40,6 @@ const OAuth = () => {
         dispatch(signInSuccess(data));
         navigate("/");
       }
-      //console.log(data);
     } catch (error) {
       dispatch(signInFailure(error.message));
     }

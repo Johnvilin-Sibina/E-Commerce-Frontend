@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Sidebar } from "flowbite-react";
-import { HiArrowSmLeft, HiUser } from "react-icons/hi";
+import {  HiUser } from "react-icons/hi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../Redux/Slice/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,12 @@ import { MdCategory } from "react-icons/md";
 const DashboardSidebar = () => {
   const location = useLocation();
   const { currentUser } = useSelector((state) => state.user);
+  const {theme} = useSelector((state)=>state)
   const [tab, setTab] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabUrl = urlParams.get("tab");
@@ -19,8 +24,6 @@ const DashboardSidebar = () => {
       setTab(tabUrl);
     }
   }, [location.search]);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleSignOut = () => {
     dispatch(signOutSuccess());
@@ -71,6 +74,16 @@ const DashboardSidebar = () => {
               className={currentUser.rest.isAdmin && "hidden"}
             >
               My Cart
+            </Sidebar.Item>
+          </Link>
+          <Link to="/dashboard?tab=myorders">
+            <Sidebar.Item
+              active={tab === "myorders"}
+              icon={AiFillProduct}
+              as="div"
+              className={currentUser.rest.isAdmin && "hidden"}
+            >
+              My Orders
             </Sidebar.Item>
           </Link>
           <Sidebar.Item

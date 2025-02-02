@@ -9,7 +9,7 @@ const SignUp = () => {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const {theme} = useSelector((state)=>state.theme)
+  const { theme } = useSelector((state) => state.theme);
   const navigate = useNavigate();
 
   //Function to handle the value change in the form
@@ -20,7 +20,13 @@ const SignUp = () => {
   //Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password || !formData.address || !formData.phoneNumber) {
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.address ||
+      !formData.phoneNumber
+    ) {
       return setErrorMessage("Please fill out all the fields");
     }
     try {
@@ -54,7 +60,13 @@ const SignUp = () => {
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <div className="font-bold dark:text-white text-4xl">
-            <span className="px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg">
+            <span
+              className={
+                theme === "light"
+                  ? "px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg"
+                  : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 rounded-lg px-2 py-1"
+              }
+            >
               LootMart
             </span>
           </div>
@@ -111,14 +123,18 @@ const SignUp = () => {
               />
             </div>
             <Button
-              className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300" : 'bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500'}
+              className={
+                theme === "light"
+                  ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300"
+                  : "bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500"
+              }
               type="submit"
               disabled={loading}
             >
               {loading ? (
                 <>
                   <Spinner color="success" />
-                  <span className='pl-3'>Loading...</span>
+                  <span className="pl-3">Loading...</span>
                 </>
               ) : (
                 "Sign Up"
@@ -133,9 +149,15 @@ const SignUp = () => {
             </Link>
           </div>
           {errorMessage && (
-            <Alert className="mt-3" color="failure" icon={HiInformationCircle} withBorderAccent>
-              <span className="font-medium me-2">OOPS!</span>{errorMessage}
-              </Alert>
+            <Alert
+              className="mt-3"
+              color="failure"
+              icon={HiInformationCircle}
+              withBorderAccent
+            >
+              <span className="font-medium me-2">OOPS!</span>
+              {errorMessage}
+            </Alert>
           )}
         </div>
       </div>

@@ -30,7 +30,7 @@ const DashboardProfile = () => {
   const [updateUserError, setUpdateUserError] = useState(null);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [user,setUser] = useState(currentUser)
+  const [user, setUser] = useState(currentUser);
 
   //Function to handle profile picture update
   const handleImageChange = async (e) => {
@@ -112,27 +112,6 @@ const DashboardProfile = () => {
     }
   };
 
-  // useEffect(()=>{
-  //  try {
-  //   const fetchUpdatedUser = async()=>{
-  //     const res = await fetch(`http://localhost:5000/api/user/get-user/${currentUser.rest._id}`,{
-  //       method: 'GET',
-  //       headers:{
-  //         "Content-Type":'application/json',
-  //         'token':localStorage.getItem('Token')
-  //       }
-  //     })
-  //     const data = await res.json()
-  //     console.log(data)
-  //    }
-  //    fetchUpdatedUser()
-  //    if(res.ok)
-  //     setUser(data)
-  //  } catch (error) {
-  //   console.log('An error occured:',error)
-  //  }
-  // },[currentUser])
-
   const handleSignOut = () => {
     dispatch(signOutSuccess());
     localStorage.removeItem("Token");
@@ -158,7 +137,7 @@ const DashboardProfile = () => {
         dispatch(deleteUserFailure(data.message));
       } else {
         dispatch(deleteUserSuccess(data));
-        navigate('/signup')
+        navigate("/signup");
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));

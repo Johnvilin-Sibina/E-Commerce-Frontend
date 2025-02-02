@@ -4,8 +4,12 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
-  category:null,
-  product:null,
+  category: null,
+  product: null,
+  products: [],
+  cartItems: [],
+  cart: [],
+  orders: [],
 };
 
 const userSlice = createSlice({
@@ -56,32 +60,84 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    createCategoryStart:(state,action)=>{
+    createCategoryStart: (state, action) => {
       state.loading = true;
       state.error = null;
     },
-    createCategorySuccess:(state,action)=>{
+    createCategorySuccess: (state, action) => {
       state.category = action.payload;
       state.loading = false;
-      state.error = null
+      state.error = null;
     },
-    createCategoryFailure:(state,action)=>{
+    createCategoryFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
-    createProductStart:(state)=>{
+    createProductStart: (state) => {
       state.loading = true;
-      state.error = null
+      state.error = null;
     },
-    createProductSuccess:(state,action)=>{
+    createProductSuccess: (state, action) => {
       state.product = action.payload;
       state.loading = false;
       state.error = null;
     },
-    createProductFailure:(state,action)=>{
+    createProductFailure: (state, action) => {
       state.loading = false;
-      state.error = action.payload
-    }, 
+      state.error = action.payload;
+    },
+    fetchProductsStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchProductsSuccess: (state, action) => {
+      state.products = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    fetchProductsFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    addToCartStart: (state, action) => {
+      state.loading = true;
+      state.error = false;
+    },
+    addToCartSuccess: (state, action) => {
+      state.cartItems = true;
+      state.loading = false;
+      state.error = false;
+    },
+    addToCartFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    fetchCartStart: (state, action) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchCartSuccess: (state, action) => {
+      state.cart = action.payload;
+      state.loading = false;
+      state.error = false;
+    },
+    fetchCartFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
+    fetchOrdersStart: (state, action) => {
+      state.loading = false;
+      state.error = null;
+    },
+    fetchOrdersSuccess: (state, action) => {
+      state.orders = action.payload;
+      state.loading = false;
+      state.error = null;
+    },
+    fetchOrdersFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    },
   },
 });
 
@@ -102,6 +158,18 @@ export const {
   createProductStart,
   createProductSuccess,
   createProductFailure,
+  fetchProductsStart,
+  fetchProductsSuccess,
+  fetchProductsFailure,
+  fetchCartStart,
+  fetchCartSuccess,
+  fetchCartFailure,
+  addToCartStart,
+  addToCartSuccess,
+  addToCartFailure,
+  fetchOrdersStart,
+  fetchOrdersSuccess,
+  fetchOrdersFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

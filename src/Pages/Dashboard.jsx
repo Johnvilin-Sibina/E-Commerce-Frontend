@@ -6,11 +6,14 @@ import CreateProducts from "./CreateProducts";
 import { useSelector } from "react-redux";
 import CreateCategory from "./CreateCategory";
 import Cart from "./Cart";
+import Orders from "./Orders";
 
 const Dashboard = () => {
   const location = useLocation();
   const [tab, setTab] = useState("");
   const { currentUser } = useSelector((state) => state.user);
+  const { theme } = useSelector((state) => state.theme);
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabUrl = urlParams.get("tab");
@@ -18,6 +21,7 @@ const Dashboard = () => {
       setTab(tabUrl);
     }
   }, [location.search]);
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="md:w-58">
@@ -31,6 +35,7 @@ const Dashboard = () => {
         <CreateCategory />
       )}
       {tab == "mycart" && !currentUser.rest.isAdmin && <Cart />}
+      {tab == "myorders" && !currentUser.rest.isAdmin && <Orders />}
     </div>
   );
 };

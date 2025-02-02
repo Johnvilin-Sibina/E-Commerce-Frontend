@@ -10,7 +10,7 @@ import PrivateRoute from "./Components/PrivateRoute";
 import Dashboard from "./Pages/Dashboard";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
-import PaymenSuccess from "./Pages/PaymenSuccess";
+import PaymentSuccess from "./Pages/PaymentSuccess";
 import PaymentFailure from "./Pages/PaymentFailure";
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
         <Route path="/resetpassword/:id/:token" element={<ResetPassword />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/paymentsuccess" element={<PaymenSuccess />} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
           <Route path="/paymentfailure" element={<PaymentFailure />} />
         </Route>
       </Routes>

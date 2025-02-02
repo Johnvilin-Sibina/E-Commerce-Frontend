@@ -13,7 +13,7 @@ import OAuth from "../Components/OAuth";
 const Signin = () => {
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
-  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const navigate = useNavigate();
 
@@ -45,7 +45,7 @@ const Signin = () => {
         return dispatch(signInFailure(data.message));
       }
       if (response.ok) {
-        localStorage.setItem('Token',data.token)
+        localStorage.setItem("Token", data.token);
         dispatch(signInSuccess(data));
         navigate("/");
       }
@@ -59,7 +59,13 @@ const Signin = () => {
       <div className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5">
         <div className="flex-1">
           <div className="font-bold dark:text-white text-4xl">
-            <span className={theme === 'light' ? "px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg" : 'bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 rounded-lg px-2 py-1'}>
+            <span
+              className={
+                theme === "light"
+                  ? "px-2 py-2 bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-lg"
+                  : "bg-gradient-to-r from-slate-500 via-slate-300 to-slate-500 rounded-lg px-2 py-1"
+              }
+            >
               LootMart
             </span>
           </div>
@@ -89,7 +95,11 @@ const Signin = () => {
               />
             </div>
             <Button
-              className={theme === 'light' ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300" : 'bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500'}
+              className={
+                theme === "light"
+                  ? "bg-gradient-to-r from-emerald-300 via-emerald-500 to-emerald-300"
+                  : "bg-gradient-to-r from-slate-500 via-slate-400 to-slate-500"
+              }
               type="submit"
               disabled={loading}
             >
@@ -111,9 +121,11 @@ const Signin = () => {
             </Link>
           </div>
           <div>
-          <Link to='/forgotpassword' className="text-blue-700 font-semibold">Forgot Password?</Link>
+            <Link to="/forgotpassword" className="text-blue-700 font-semibold">
+              Forgot Password?
+            </Link>
           </div>
-          {errorMessage && (
+          {error && (
             <Alert
               className="mt-3"
               color="failure"
@@ -121,7 +133,7 @@ const Signin = () => {
               withBorderAccent
             >
               <span className="font-medium me-2">OOPS!</span>
-              {errorMessage}
+              {error}
             </Alert>
           )}
         </div>
