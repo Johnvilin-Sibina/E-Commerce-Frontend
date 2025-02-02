@@ -33,7 +33,7 @@ const SignUp = () => {
       setLoading(true);
       setErrorMessage(null);
       const response = await fetch(
-        "http://localhost:5000/api/auth/register-user",
+        "https://e-commerce-backend-5ceo.onrender.com/api/auth/register-user",
         {
           method: "POST",
           headers: {

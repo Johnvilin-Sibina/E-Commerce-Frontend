@@ -14,7 +14,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+        "https://e-commerce-backend-5ceo.onrender.com/api/auth/forgot-password",
         {
           method: "POST",
           headers: {

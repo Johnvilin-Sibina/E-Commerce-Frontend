@@ -30,7 +30,7 @@ const CardComponent = () => {
   const fetchProducts = async () => {
     dispatch(fetchProductsStart());
     try {
-      const res = await fetch("http://localhost:5000/api/user/get-products", {
+      const res = await fetch("https://e-commerce-backend-5ceo.onrender.com/api/user/get-products", {
         method: "GET",
       });
       const data = await res.json();
@@ -43,7 +43,7 @@ const CardComponent = () => {
   const addToCart = async (productId) => {
     dispatch(addToCartStart())
     try {
-      const res = await fetch("http://localhost:5000/api/user/add-to-cart", {
+      const res = await fetch("https://e-commerce-backend-5ceo.onrender.com/api/user/add-to-cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,7 +67,7 @@ const CardComponent = () => {
     const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/user/create-checkout-session",
+        "https://e-commerce-backend-5ceo.onrender.com/api/user/create-checkout-session",
         {
           method: "POST",
           headers: {

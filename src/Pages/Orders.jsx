@@ -21,7 +21,7 @@ const Orders = () => {
     try {
       dispatch(fetchOrdersStart());
       const response = await fetch(
-        `http://localhost:5000/api/user/get-orders/${currentUser.rest._id}`,
+        `https://e-commerce-backend-5ceo.onrender.com/api/user/get-orders/${currentUser.rest._id}`,
         {
           method: "GET",
           headers: {
@@ -50,7 +50,7 @@ const Orders = () => {
     const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY);
     try {
       const response = await fetch(
-        "http://localhost:5000/api/user/create-checkout-session",
+        "https://e-commerce-backend-5ceo.onrender.com/api/user/create-checkout-session",
         {
           method: "POST",
           headers: {

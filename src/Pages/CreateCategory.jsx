@@ -28,7 +28,7 @@ const CreateCategory = () => {
     try {
       dispatch(createCategoryStart());
       const res = await fetch(
-        "http://localhost:5000/api/admin/create-category",
+        "https://e-commerce-backend-5ceo.onrender.com/api/admin/create-category",
         {
           method: "POST",
           headers: {

@@ -91,7 +91,7 @@ const CreateProducts = () => {
     try {
       dispatch(createProductStart());
       const res = await fetch(
-        "http://localhost:5000/api/admin/create-product",
+        "https://e-commerce-backend-5ceo.onrender.com/api/admin/create-product",
         {
           method: "POST",
 

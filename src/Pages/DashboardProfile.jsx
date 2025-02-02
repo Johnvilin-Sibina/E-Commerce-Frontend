@@ -88,7 +88,7 @@ const DashboardProfile = () => {
     try {
       dispatch(updateStart());
       const res = await fetch(
-        `http://localhost:5000/api/user/update/${currentUser.rest._id}`,
+        `https://e-commerce-backend-5ceo.onrender.com/api/user/update/${currentUser.rest._id}`,
         {
           method: "PUT",
           headers: {
@@ -123,7 +123,7 @@ const DashboardProfile = () => {
     try {
       dispatch(deleteUserStart());
       const response = await fetch(
-        `http://localhost:5000/api/user/delete/${currentUser.rest._id}`,
+        `https://e-commerce-backend-5ceo.onrender.com/api/user/delete/${currentUser.rest._id}`,
         {
           method: "DELETE",
           headers: {
