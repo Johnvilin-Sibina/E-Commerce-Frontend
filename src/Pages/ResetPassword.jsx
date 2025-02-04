@@ -21,7 +21,7 @@ const ResetPassword = () => {
       const res = await fetch(
         `https://e-commerce-backend-5ceo.onrender.com/api/auth/reset-password/${id}/${token}`,
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
