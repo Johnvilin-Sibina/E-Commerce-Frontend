@@ -81,13 +81,11 @@ const CardComponent = () => {
         }
       );
       const session = await response.json();
-      console.log("Session ID:", session.id)
       const result = await stripe.redirectToCheckout({
         sessionId: session.id,
       });
     } catch (error) {
       setLocalError("Error in make payment", error.message);
-      console.error("Error in make payment:", error.message);
     }
   };
 
