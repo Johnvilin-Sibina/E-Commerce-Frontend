@@ -104,7 +104,7 @@ const CardComponent = () => {
         </div>
       )}
       <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1">
-        {products.map((product) => {
+        {products?.map((product) => {
           return (
             <Card
               className="max-w-md m-4 flex flex-col justify-between dark:bg-black dark:border-white" 
